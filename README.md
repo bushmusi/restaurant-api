@@ -21,10 +21,11 @@
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
-[x] - Have a good knowledge on how to REST API
-[x] - Have VSCode or other text editor installed. [Link to download VSCode](https://code.visualstudio.com/download)
-[x] - Install composer package. [Link to download composer](https://getcomposer.org/download/)
-[x] - Have git installed.[Link to download git](https://git-scm.com/downloads)
+ - Have a good knowledge on how to REST API
+ - Have VSCode or other text editor installed. [Link to download VSCode](https://code.visualstudio.com/download)
+ - Install composer package. [Link to download composer](https://getcomposer.org/download/)
+ - Have git installed.[Link to download git](https://git-scm.com/downloads)
+
 ### Setup
 - `git clone https://github.com/bushmusi/restaurant-api`
 - `cd restaurant-api/`
