@@ -16,6 +16,7 @@ class CreateSiUnitsTable extends Migration
         Schema::create('si_units', function (Blueprint $table) {
             $table->id();
             $table->string('siunit',50)->unique();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
