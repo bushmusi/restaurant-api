@@ -7,8 +7,8 @@ use App\Http\Controllers\Api\SiUnitController;
 use App\Http\Controllers\Api\Stock\StockItemController;
 use App\Http\Controllers\Api\Stock\StockInController;
 use App\Http\Controllers\Api\Stock\StockOutController;
+use App\Http\Controllers\Api\Stock\StockWastageController;
 use App\Http\Controllers\Api\EmployeeController;
-use App\Http\Controllers\Api\StockWastageController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
