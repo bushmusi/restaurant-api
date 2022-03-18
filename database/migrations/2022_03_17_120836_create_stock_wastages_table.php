@@ -26,6 +26,7 @@ class CreateStockWastagesTable extends Migration
             $table->foreign('stock_item_id')
                   ->references('id')->on('stock_items')
                   ->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
