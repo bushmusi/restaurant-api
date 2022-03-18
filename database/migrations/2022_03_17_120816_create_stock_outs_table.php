@@ -30,6 +30,7 @@ class CreateStockOutsTable extends Migration
             $table->foreign('employee_id')
                   ->references('id')->on('employees')
                   ->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

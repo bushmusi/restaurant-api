@@ -18,6 +18,7 @@ class CreateEmployeesTable extends Migration
             $table->string('name',100);
             $table->string('position',100);
             $table->string('empID',100)->unique();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
