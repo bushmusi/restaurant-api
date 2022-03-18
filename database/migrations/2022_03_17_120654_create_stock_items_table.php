@@ -19,12 +19,11 @@ class CreateStockItemsTable extends Migration
             $table->string('name_am',50)->unique();
             $table->bigInteger('si_unit_id')->unsigned();
             $table->bigInteger('department_id')->unsigned();
+            $table->enum('type',['Consumable','Not-consumable']);
 
-            
             $table->foreign('si_unit_id')
-                    ->references('id')->on('si_units')
-                    ->onDelete('cascade');
-            $table->string('type',20);
+                ->references('id')->on('si_units')
+                ->onDelete('cascade');
 
             $table->foreign('department_id')
                   ->references('id')->on('departments')
