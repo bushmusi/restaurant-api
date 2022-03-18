@@ -11,6 +11,6 @@ class StockOut extends Model
     use HasFactory;
     use SoftDeletes;
  
-    protected $gaurded = [];
+    protected $guarded = [];
     protected $dates = ['deleted_at'];
 }
