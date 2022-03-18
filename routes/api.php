@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DepartmentController;
+use App\Http\Controllers\Api\SiUnitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::controller(DepartmentController::class)->prefix('dept/')->group(function(){
     Route::post('create','add');
     Route::put('update','update');
-    Route::get('get_all','getAll');
+    Route::get('get-all','getAll');
     Route::get('get/{id}','getById');
     Route::delete('delete/{id}', 'delete');
+});
+
+Route::controller(SiUnitController::class)->prefix('si-unit/')->group(function() {
+    Route::post('create','add');
+    Route::put('update','update');
+    Route::get('get-all','getAll');
+    Route::get('get/{id}','getById');
+    Route::delete('delete/{id}','deleteItem');
 });
