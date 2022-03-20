@@ -1,5 +1,3 @@
-![](https://img.shields.io/badge/Microverse-blueviolet)
-
 # Restaurant API
 
 > This project is to expose API for request. I have used Laravel 8 framework and REST API. There are models, migrations, controllers and route features are some staffs I have used ..
@@ -11,9 +9,9 @@
 - lARAVEL
 - MySql, Docker, Linters, and Docs
 
-## Live Demo (Comming soon)
+## API Docuemntation
 
-[Live Demo Link](https://livedemo.com)
+[You can find it here](https://www.getpostman.com/collections/c65e447ef6026d4d74f1)
 
 
 ## Getting Started
