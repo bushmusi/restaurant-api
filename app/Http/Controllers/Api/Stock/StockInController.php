@@ -76,19 +76,12 @@ class StockInController extends Controller
 
         $data = StockIn::orderBy('indate')->get();
 
-        if(!($data)) {
-            return $this->jsonReponse(false,"No data",null,202);
-        }
-
         return $this->jsonReponse(true,"Success",$data,202);
     }
 
     public function getStockInItem($id) {
 
         $data = StockIn::find($id);
-        if(!($data)) {
-            return $this->jsonReponse(false,"No data",null,202);
-        }
 
         return $this->jsonReponse(true,"Success",$data,202);
     }
@@ -96,10 +89,6 @@ class StockInController extends Controller
     public function getStockInByStckID($stock_id) {
 
         $data = StockIn::where('stock_item_id','=',$stock_id)->get();
-        
-        if(!($data)) {
-            return $this->jsonReponse(false,"No data",null,202);
-        }
 
         return $this->jsonReponse(true,"Success",$data,202);
     }

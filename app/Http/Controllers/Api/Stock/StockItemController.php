@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 use App\Models\StockItem;
 use App\Models\StockIn;
 use App\Models\StockOut;
+use App\Models\StockWastage;
 
 class StockItemController extends Controller
 {
@@ -77,19 +78,12 @@ class StockItemController extends Controller
 
         $data = StockItem::orderBy('name_en')->get();
 
-        if(!($data)) {
-            return $this->jsonReponse(false,"No data",null,202);
-        }
-
         return $this->jsonReponse(true,"Success",$data,202);
     }
 
     public function getStockItem($id) {
 
         $data = StockItem::find($id);
-        if(!($data)) {
-            return $this->jsonReponse(false,"No data",null,202);
-        }
 
         return $this->jsonReponse(true,"Success",$data,202);
     }
@@ -107,7 +101,21 @@ class StockItemController extends Controller
     }
 
     public function deleteStockItem($id) {
+        
         $data = StockItem::find($id);
+        $stockItemIn = StockIn::where('stock_item_id',$id)->get();
+        $stockItemOut = StockOut::where('stock_item_id',$id)->get();
+        $stockItemWastage = StockWastage::where('stock_item_id',$id)->get();
+        if (count($stockItemIn) != '0') {
+            return $this->jsonReponse(false,"Stock Item referenced in Stock In",null,202);
+        }
+        if (count($stockItemOut) != '0') {
+            return $this->jsonReponse(false,"Stock Item referenced in Stock Out",null,202);
+        }
+        if (count($stockItemWastage) != '0') {
+            return $this->jsonReponse(false,"Stock Item referenced in Stock Wastage",null,202);
+        }
+
         if(!($data)) {
             return $this->jsonReponse(false,"No data",null,202);
         }

@@ -80,19 +80,12 @@ class StockOutController extends Controller
 
         $data = StockOut::orderBy('outdate')->get();
 
-        if(!($data)) {
-            return $this->jsonReponse(false,"No data",null,202);
-        }
-
         return $this->jsonReponse(true,"Success",$data,202);
     }
 
     public function getStockOutItem($id) {
 
         $data = StockOut::find($id);
-        if(!($data)) {
-            return $this->jsonReponse(false,"No data",null,202);
-        }
 
         return $this->jsonReponse(true,"Success",$data,202);
     }
@@ -100,10 +93,6 @@ class StockOutController extends Controller
     public function getStockOutByStckID($stock_id) {
 
         $data = StockOut::where('stock_item_id','=',$stock_id)->get();
-        
-        if(!($data)) {
-            return $this->jsonReponse(false,"No data",null,202);
-        }
 
         return $this->jsonReponse(true,"Success",$data,202);
     }

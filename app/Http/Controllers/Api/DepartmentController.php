@@ -73,19 +73,12 @@ class DepartmentController extends Controller
     public function getAll(Request $request){
 
         $data = Department::orderBy('dep_name')->get();
-        
-        if(!($data)){
-            return $this->jsonResponse(false,"No data",null,200);
-        }
 
         return $this->jsonReponse(true,"Success",$data,200);
     }
 
     public function getById($id) {
         $data = Department::find($id);
-        if(!($data)){
-            return $this->jsonReponse(false,'No data',null,200);
-        }
         return $this->jsonReponse(true,'success',$data,200);
     }
 

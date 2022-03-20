@@ -81,19 +81,12 @@ class StockWastageController extends Controller
 
         $data = StockWastage::orderBy('wastage_date')->get();
 
-        if(!($data)) {
-            return $this->jsonReponse(false,"No data",null,202);
-        }
-
         return $this->jsonReponse(true,"Success",$data,202);
     }
 
     public function getStockWastageItem($id) {
 
         $data = StockWastage::find($id);
-        if(!($data)) {
-            return $this->jsonReponse(false,"No data",null,202);
-        }
 
         return $this->jsonReponse(true,"Success",$data,202);
     }
@@ -101,10 +94,6 @@ class StockWastageController extends Controller
     public function getStockWastageByStckID($stock_id) {
 
         $data = StockWastage::where('stock_item_id','=',$stock_id)->get();
-        
-        if(!($data)) {
-            return $this->jsonReponse(false,"No data",null,202);
-        }
 
         return $this->jsonReponse(true,"Success",$data,202);
     }

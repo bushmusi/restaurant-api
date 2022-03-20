@@ -60,10 +60,6 @@ class SiUnitController extends Controller
 
         $data = SiUnit::find($id);
 
-        if(!($data)) {
-            return $this->jsonReponse(false,"No data",null,200);
-        }
-
         return $this->jsonReponse(false,"Successfully fetched",$data,200);
     }
 
