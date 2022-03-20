@@ -9,6 +9,10 @@ use App\Http\Controllers\Api\Stock\StockInController;
 use App\Http\Controllers\Api\Stock\StockOutController;
 use App\Http\Controllers\Api\Stock\StockWastageController;
 use App\Http\Controllers\Api\EmployeeController;
+use App\Http\Controllers\Api\Menu\CatagoryController;
+use App\Http\Controllers\Api\Menu\MenuController;
+use App\Http\Controllers\Api\Menu\MenuTypeController;
+use App\Http\Controllers\Api\Menu\MenuCatagoryController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -81,3 +85,42 @@ Route::controller(StockWastageController::class)->prefix('stock/')->group(functi
         Route::delete('delete/{id}','deleteStockWastage');
     });
 });
+
+Route::prefix('menu')->group(function () {
+    
+    Route::controller(CatagoryController::class)->prefix('catagory')->group( function() {
+
+        Route::post('create','create');
+        Route::put('update','update');
+        Route::get('get-all','getAll');
+        Route::get('get/{id}','get');
+        Route::delete('delete/{id}','delete');
+    });
+
+    Route::controller(MenuTypeController::class)->prefix('menu-type')->group( function() {
+        Route::post('create','create');
+        Route::put('update','update');
+        Route::get('get-all','getAll');
+        Route::get('get/{id}','get');
+        Route::delete('delete/{id}','delete');
+    });
+
+    Route::controller(MenuController::class)->prefix('menu-item')->group( function () {
+        Route::post('create','create');
+        Route::put('update','update');
+        Route::get('get-all','getAll');
+        Route::get('get/{id}','get');
+        Route::get('filter','filter');
+        Route::delete('delete/{id}','delete');
+    });
+
+    Route::controller(MenuCatagoryController::class)->prefix('menu-catagory')->group( function() {
+        Route::post('create','create');
+        Route::put('update','update');
+        Route::get('get-all','getAll');
+        Route::get('get/{id}','get');
+        Route::get('filter','filter');
+        Route::delete('delete/{id}','delete');
+    });
+});
+
