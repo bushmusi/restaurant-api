@@ -10,14 +10,23 @@ use App\Models\SiUnit;
 class SiUnitController extends Controller
 {
     //
+    public function errMsg() {
+        return [
+            'siunit.required' => 'SI Unit is required',
+            'siunit.max' => 'SI Unit string length shold not be more thatn 50',
+            'siunit.unique' => 'SI Unit should be unique'
+        ];
+    }
     public function add(Request $req) {
         
         $validator = Validator::make($req->all(),[
             'siunit' => 'required|max:50|unique:si_units,siunit'
-        ]);
+        ],$this->errMsg());
 
         if($validator->fails()) {
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+            foreach($validator->errors()->toArray() as $k => $v) {
+                return $this->jsonReponse(false,$v[0],null,201);
+            }
         }
 
         $data = SiUnit::create([
@@ -31,11 +40,13 @@ class SiUnitController extends Controller
 
         $validator = Validator::make($req->all(),[
             'id' => 'required|exists:si_units,id',
-            'siunit' => 'required|max:50|unique:si_units,siunit'
-        ]);
+            'siunit' => 'required|max:50|unique:si_units,siunit,'.$req->id
+        ],$this->errMsg());
 
         if($validator->fails()) {
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+            foreach($validator->errors()->toArray() as $k => $v) {
+                return $this->jsonReponse(false,$v[0],null,201);
+            }
         }
 
         $data = SiUnit::find($req->id);
