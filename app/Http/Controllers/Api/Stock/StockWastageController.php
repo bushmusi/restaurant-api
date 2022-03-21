@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Api\Stock;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\StockOut;
 use Carbon\Carbon;
+use App\Models\StockWastage;
 
-class StockOutController extends Controller
+class StockWastageController extends Controller
 {
     //
     public function create(Request $req) {
@@ -16,89 +16,90 @@ class StockOutController extends Controller
         $validator = Validator::make( $req->all(), [
             'stock_item_id' => 'required|exists:stock_items,id',
             'quantity' => 'required|min:1|max:1000',
-            'outdate' => 'required|date|after_or_equal:Jan-01-2022',
+            'wastage_date' => 'required|date|after_or_equal:Jan-01-2022',
+            'isExpire' => 'required|boolean',
             'remark' => 'required|max:255',
-            'employee_id' => 'required|exists:employees,id'
         ]);
 
         if($validator->fails()){
             return $this->jsonReponse(false,$validator->errors(),null,201);
         }
 
-        $outdate = Carbon::parse($req->outdate);
-        $isPast = $outdate->isPast();
+        $wastage_date = Carbon::parse($req->wastage_date);
+        $isPast = $wastage_date->isPast();
         if(!($isPast)) {
-            return $this->jsonReponse(false,"outdate is in the future",null,201);
+            return $this->jsonReponse(false,"wastage date is in the future",null,201);
         }
 
-        $data = StockOut::create([
+        $data = StockWastage::create([
             'stock_item_id' => $req->stock_item_id,
             'quantity' => $req->quantity,
-            'outdate' => $req->outdate,
+            'wastage_date' => $req->wastage_date,
             'remark' => $req->remark,
-            'employee_id' => $req->employee_id
+            'isExpire' => $req->isExpire
         ]);
 
         return $this->jsonReponse(true,"Created successfully",$data,201);
     }
 
     public function update(Request $req) {
+
         $validator = Validator::make( $req->all(), [
             'quantity' => 'required|min:1|max:1000',
-            'outdate' => 'required|date|after_or_equal:Jan-01-2022',
+            'wastage_date' => 'required|date|after_or_equal:Jan-01-2022',
+            'isExpire' => 'required|boolean',
             'remark' => 'required|max:255',
-            'employee_id' => 'required|exists:employees,id'
         ]);
 
         if($validator->fails()){
             return $this->jsonReponse(false,$validator->errors(),null,201);
         }
 
-        $outdate = Carbon::parse($req->outdate);
-        $isPast = $outdate->isPast();
+        $wastage_date = Carbon::parse($req->wastage_date);
+        $isPast = $wastage_date->isPast();
         if(!($isPast)) {
-            return $this->jsonReponse(false,"outdate is in the future",null,201);
+            return $this->jsonReponse(false,"wastage date is in the future",null,201);
         }
 
-        $item = StockOut::find($req->id);
+        $item = StockWastage::find($req->id);
         if(!($item)){
             return $this->jsonReponse(false,"No record with given id",null,201);
         }
 
         $item->update([
             'quantity' => $req->quantity,
-            'outdate' => $req->outdate,
+            'wastage_date' => $req->wastage_date,
             'remark' => $req->remark,
-            'employee_id' => $req->employee_id
+            'isExpire' => $req->isExpire
         ]);
 
 
         return $this->jsonReponse(true,"success",$item,201);
     }
 
-    public function getStockOutAll(Request $req) {
+    public function getStockWastageAll(Request $req) {
 
-        $data = StockOut::orderBy('outdate')->get();
-
-        return $this->jsonReponse(true,"Success",$data,202);
-    }
-
-    public function getStockOutItem($id) {
-
-        $data = StockOut::find($id);
+        $data = StockWastage::orderBy('wastage_date')->get();
 
         return $this->jsonReponse(true,"Success",$data,202);
     }
 
-    public function getStockOutByStckID($stock_id) {
+    public function getStockWastageItem($id) {
 
-        $data = StockOut::where('stock_item_id','=',$stock_id)->get();
+        $data = StockWastage::find($id);
 
         return $this->jsonReponse(true,"Success",$data,202);
     }
 
-    public function deleteStockOut($id) {
-        $data = StockOut::find($id);
+    public function getStockWastageByStckID($stock_id) {
+
+        $data = StockWastage::where('stock_item_id','=',$stock_id)->get();
+
+        return $this->jsonReponse(true,"Success",$data,202);
+    }
+
+    public function deleteStockWastage($id) {
+        $data = StockWastage::find($id);
         if(!($data)) {
             return $this->jsonReponse(false,"No data",null,202);
         }
@@ -106,4 +107,6 @@ class StockOutController extends Controller
         $data->delete();
         return $this->jsonReponse(true,"Success",$old,202);
     }
+
+
 }

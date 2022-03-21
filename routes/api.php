@@ -7,7 +7,12 @@ use App\Http\Controllers\Api\SiUnitController;
 use App\Http\Controllers\Api\Stock\StockItemController;
 use App\Http\Controllers\Api\Stock\StockInController;
 use App\Http\Controllers\Api\Stock\StockOutController;
+use App\Http\Controllers\Api\Stock\StockWastageController;
 use App\Http\Controllers\Api\EmployeeController;
+use App\Http\Controllers\Api\Menu\CatagoryController;
+use App\Http\Controllers\Api\Menu\MenuController;
+use App\Http\Controllers\Api\Menu\MenuTypeController;
+use App\Http\Controllers\Api\Menu\MenuCatagoryController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -30,7 +35,6 @@ Route::controller(SiUnitController::class)->prefix('si-unit/')->group(function()
 });
 
 Route::controller(StockItemController::class)->prefix('stock/')->group(function() {
-
     Route::prefix('item/')->group(function () {
         Route::post('create','createStockItem');
         Route::put('update','updateStockItem');
@@ -42,7 +46,6 @@ Route::controller(StockItemController::class)->prefix('stock/')->group(function(
 });
 
 Route::controller(StockInController::class)->prefix('stock/')->group(function() {
-
     Route::prefix('in/')->group(function () {
         Route::post('create','create');
         Route::put('update','update');
@@ -62,7 +65,6 @@ Route::controller(EmployeeController::class)->prefix('employee/')->group(functio
 });
 
 Route::controller(StockOutController::class)->prefix('stock/')->group(function() {
-
     Route::prefix('out/')->group(function () {
         Route::post('create','create');
         Route::put('update','update');
@@ -72,3 +74,53 @@ Route::controller(StockOutController::class)->prefix('stock/')->group(function()
         Route::delete('delete/{id}','deleteStockOut');
     });
 });
+
+Route::controller(StockWastageController::class)->prefix('stock/')->group(function() {
+    Route::prefix('wastage/')->group(function () {
+        Route::post('create','create');
+        Route::put('update','update');
+        Route::get('get-all','getStockWastageAll');
+        Route::get('get/{id}','getStockWastageItem');
+        Route::get('get-stock-id/{stock_id}','getStockWastageByStckID');
+        Route::delete('delete/{id}','deleteStockWastage');
+    });
+});
+
+Route::prefix('menu')->group(function () {
+    
+    Route::controller(CatagoryController::class)->prefix('catagory')->group( function() {
+
+        Route::post('create','create');
+        Route::put('update','update');
+        Route::get('get-all','getAll');
+        Route::get('get/{id}','get');
+        Route::delete('delete/{id}','delete');
+    });
+
+    Route::controller(MenuTypeController::class)->prefix('menu-type')->group( function() {
+        Route::post('create','create');
+        Route::put('update','update');
+        Route::get('get-all','getAll');
+        Route::get('get/{id}','get');
+        Route::delete('delete/{id}','delete');
+    });
+
+    Route::controller(MenuController::class)->prefix('menu-item')->group( function () {
+        Route::post('create','create');
+        Route::put('update','update');
+        Route::get('get-all','getAll');
+        Route::get('get/{id}','get');
+        Route::get('filter','filter');
+        Route::delete('delete/{id}','delete');
+    });
+
+    Route::controller(MenuCatagoryController::class)->prefix('menu-catagory')->group( function() {
+        Route::post('create','create');
+        Route::put('update','update');
+        Route::get('get-all','getAll');
+        Route::get('get/{id}','get');
+        Route::get('filter','filter');
+        Route::delete('delete/{id}','delete');
+    });
+});
+

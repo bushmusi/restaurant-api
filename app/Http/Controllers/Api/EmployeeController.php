@@ -36,7 +36,7 @@ class EmployeeController extends Controller
         $validator = Validator::make( $req->all(), [
             'name' => 'required|unique:employees,id|max:50',
             'position' => 'required|max:50',
-            'empID' => 'required|max:50|unique:employees,empID'
+            'empID' => 'required|max:50'
         ]);
 
         if($validator->fails()){
@@ -62,19 +62,12 @@ class EmployeeController extends Controller
 
         $data = Employee::orderBy('empID')->get();
 
-        if(!($data)) {
-            return $this->jsonReponse(false,"No data",null,202);
-        }
-
         return $this->jsonReponse(true,"Success",$data,202);
     }
 
     public function getByID($id) {
 
         $data = Employee::find($id);
-        if(!($data)) {
-            return $this->jsonReponse(false,"No data",null,202);
-        }
 
         return $this->jsonReponse(true,"Success",$data,202);
     }
