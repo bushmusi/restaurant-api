@@ -11,6 +11,18 @@ use App\Models\Menu\MenuCatagory;
 class MenuController extends Controller
 {
     //
+    public function validatorMessage() {
+        return [
+            'name_en.required' => 'Name In English is required',
+            'name_am.required' => 'Name In Amharic is required',
+            'type_id.required' => 'Type ID is required',
+            'name_en.unique' => 'Name in English must be unique',
+            'name_am.unique' => 'Name in Amharic must be unique',
+            'type_id.exists' => 'Type ID doesn\'t exist',
+            'name_en.unique:menus,name_en' => "It shouldn't be"
+        ];
+    }
+    
     public function create(Request $request){
 
         $validator = Validator::make($request->all(), [
@@ -19,10 +31,12 @@ class MenuController extends Controller
             'price' => 'required|numeric|between:0,5000',
             'content' => 'required|max:500',
             'type_id' => 'required|exists:menu_types,id'
-        ]);
+        ], $this->validatorMessage());
 
-        if($validator->fails()){
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+        if($validator->fails()) {
+            foreach( $validator->errors()->toArray() as $key => $value) {
+                return $this->jsonReponse(false,$value[0],null,201);
+            }
         }
 
         $value = Menu::create([
@@ -40,17 +54,19 @@ class MenuController extends Controller
     public function update(Request $request){
 
         $validator = Validator::make($request->all(), [
-            'name_en' => 'required|unique:menus,name_en|max:50',
-            'name_am' => 'required|unique:menus,name_am|max:50',
+            'id' => 'required|exists:menus,id',
+            'name_en' => 'required|unique:menus,name_en,'.$request->id.'|max:50',
+            'name_am' => 'required|unique:menus,name_am,'.$request->id.'|max:50',
             'price' => 'required|numeric|between:0,5000',
             'content' => 'required|max:500',
-            'type_id' => 'required|exists:menu_types,id',
-            'id' => 'required|exists:menus,id'
+            'type_id' => 'required|exists:menu_types,id'
 
-        ]);
+        ],$this->validatorMessage());
 
-        if($validator->fails()){
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+        if($validator->fails()) {
+            foreach( $validator->errors()->toArray() as $key => $value) {
+                return $this->jsonReponse(false,$value[0],null,201);
+            }
         }
 
         $value = Menu::find($request->id);

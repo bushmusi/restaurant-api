@@ -10,18 +10,22 @@ use App\Models\Department;
 class DepartmentController extends Controller
 {
     //
+    public function validateErrMsg() {
+        return [
+            'dep_name.required' => "Department Name is required",
+            'dep_name.unique' => "Department Name should be unique",
+        ];
+    }
     public function add(Request $request){
 
         $validator = Validator::make($request->all(), [
             'dep_name' => 'required|unique:departments|max:50',
-        ]);
+        ],$this->validateErrMsg());
 
         if($validator->fails()){
-            return response()->json([
-                'success' => false,
-                'msg' => $validator->errors(),
-                'data' => null
-            ],201);
+            foreach($validator->errors()->toArray() as $k => $v) {
+                return $this->jsonReponse(false,$v[0],null,201);
+            }
         }
 
         $dept = Department::create([
@@ -39,16 +43,14 @@ class DepartmentController extends Controller
 
         $validator = Validator::make($request->all(), [
             'id' => 'required|exists:departments,id',
-            'dep_name' => 'required|unique:departments,dep_name|max:50',
+            'dep_name' => 'required|unique:departments,dep_name,'.$request->id.'|max:50',
 
-        ]);
+        ],$this->validateErrMsg());
 
         if($validator->fails()){
-            return response()->json([
-                'success' => false,
-                'msg' => $validator->errors(),
-                'data' => null
-            ]);
+            foreach($validator->errors()->toArray() as $k => $v) {
+                return $this->jsonReponse(false,$v[0],null,201);
+            }
         }
 
         $value = Department::find($request->id);

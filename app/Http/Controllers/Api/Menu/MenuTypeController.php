@@ -11,14 +11,23 @@ use App\Models\Menu\Menu;
 class MenuTypeController extends Controller
 {
     //
+    public function validateErrMsg() {
+        return [
+            'type.required' => 'Tyep is required',
+            'type.unique' => 'Type must be unique'
+        ];
+    }
+
     public function create(Request $request){
 
         $validator = Validator::make($request->all(), [
             'type' => 'required|unique:menu_types,type|max:50',
-        ]);
+        ],$this->validateErrMsg());
 
         if($validator->fails()){
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+            foreach($validator->errors()->toArray() as $key => $value){
+                return $this->jsonReponse(false,$value[0],null,201);
+            }
         }
 
         $value = MenuType::create([
@@ -32,12 +41,14 @@ class MenuTypeController extends Controller
 
         $validator = Validator::make($request->all(), [
             'id' => 'required|exists:menu_types,id',
-            'type' => 'required|unique:menu_types,type|max:50',
+            'type' => 'required|unique:menu_types,type,'.$request->id.'|max:50',
 
-        ]);
+        ],$this->validateErrMsg());
 
         if($validator->fails()){
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+            foreach($validator->errors()->toArray() as $key => $value){
+                return $this->jsonReponse(false,$value[0],null,201);
+            }
         }
 
         $value = MenuType::find($request->id);

@@ -14,13 +14,19 @@ class CatagoryController extends Controller
     public function create(Request $request){
 
         $validator = Validator::make($request->all(), [
-            'cat_name' => 'required|unique:catagories,cat_name|max:50',
-        ]);
+                'cat_name' => 'required|unique:catagories,cat_name|max:50',
+            ],
+             [
+                 'cat_name.required' => 'Catagory name is required',
+             ]   
+        );
 
         if($validator->fails()){
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+            foreach($validator->errors()->toArray() as $key => $value){
+                return $this->jsonReponse(false,$value[0],null,201);
+            }
         }
-
+        
         $catagory = Catagory::create([
             'cat_name' => $request->cat_name
         ]);
@@ -32,12 +38,14 @@ class CatagoryController extends Controller
 
         $validator = Validator::make($request->all(), [
             'id' => 'required|exists:catagories,id',
-            'cat_name' => 'required|unique:catagories,cat_name|max:50',
+            'cat_name' => 'required|unique:catagories,cat_name,'. $request->id.'|max:50',
 
         ]);
 
         if($validator->fails()){
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+            foreach($validator->errors()->toArray() as $key => $value){
+                return $this->jsonReponse(false,$value[0],null,201);
+            }
         }
 
         $value = Catagory::find($request->id);

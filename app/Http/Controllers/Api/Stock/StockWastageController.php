@@ -11,6 +11,17 @@ use App\Models\StockWastage;
 class StockWastageController extends Controller
 {
     //
+    public function errMsg() {
+        return [
+            'stock_item_id.required' => 'Stock Item is required',
+            'stock_item_id.exists' => 'Stock Item doesn\'t exist',
+            'isExpire.required' => 'Is Expire field is required',
+            'isExpire.boolean' => 'Is expire should be boolean',
+            'wastage_date.required' => 'Wastage Date is required',
+            'wastage_date.date' => 'Invalid date format',
+            'wastage_date.after_or_equal' => 'Wastage Date should be after Jan-01-2022'
+        ];
+    }
     public function create(Request $req) {
         
         $validator = Validator::make( $req->all(), [
@@ -19,10 +30,12 @@ class StockWastageController extends Controller
             'wastage_date' => 'required|date|after_or_equal:Jan-01-2022',
             'isExpire' => 'required|boolean',
             'remark' => 'required|max:255',
-        ]);
+        ],$this->errMsg());
 
         if($validator->fails()){
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+            foreach($validator->errors()->toArray() as $k => $v) {
+                return $this->jsonReponse(false,$v[0],null,201);
+            }
         }
 
         $wastage_date = Carbon::parse($req->wastage_date);
@@ -45,14 +58,17 @@ class StockWastageController extends Controller
     public function update(Request $req) {
 
         $validator = Validator::make( $req->all(), [
+            'id' => 'required',
             'quantity' => 'required|min:1|max:1000',
             'wastage_date' => 'required|date|after_or_equal:Jan-01-2022',
             'isExpire' => 'required|boolean',
             'remark' => 'required|max:255',
-        ]);
+        ],$this->errMsg());
 
         if($validator->fails()){
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+            foreach($validator->errors()->toArray() as $k => $v) {
+                return $this->jsonReponse(false,$v[0],null,201);
+            }
         }
 
         $wastage_date = Carbon::parse($req->wastage_date);

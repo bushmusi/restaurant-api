@@ -11,6 +11,14 @@ use Carbon\Carbon;
 class StockOutController extends Controller
 {
     //
+    public function errMsg() {
+        return [
+            'stock_item_id.required' => 'Stock Item is required',
+            'stock_item_id.exists' => 'Stock Item doesn\'t exist',
+            'employee_id.required' => 'Employee is required',
+            'employee_id.exists' => 'Employee doesn\'t exist',
+        ];
+    }
     public function create(Request $req) {
         
         $validator = Validator::make( $req->all(), [
@@ -19,10 +27,12 @@ class StockOutController extends Controller
             'outdate' => 'required|date|after_or_equal:Jan-01-2022',
             'remark' => 'required|max:255',
             'employee_id' => 'required|exists:employees,id'
-        ]);
+        ],$this->errMsg());
 
         if($validator->fails()){
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+            foreach($validator->errors()->toArray() as $k => $v) {
+                return $this->jsonReponse(false,$v[0],null,201);
+            }
         }
 
         $outdate = Carbon::parse($req->outdate);
@@ -44,14 +54,17 @@ class StockOutController extends Controller
 
     public function update(Request $req) {
         $validator = Validator::make( $req->all(), [
+            'id' => 'required',
             'quantity' => 'required|min:1|max:1000',
             'outdate' => 'required|date|after_or_equal:Jan-01-2022',
             'remark' => 'required|max:255',
             'employee_id' => 'required|exists:employees,id'
-        ]);
+        ],$this->errMsg());
 
         if($validator->fails()){
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+            foreach($validator->errors()->toArray() as $k => $v) {
+                return $this->jsonReponse(false,$v[0],null,201);
+            }
         }
 
         $outdate = Carbon::parse($req->outdate);

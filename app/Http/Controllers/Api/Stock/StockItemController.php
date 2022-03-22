@@ -14,6 +14,21 @@ use App\Models\StockWastage;
 class StockItemController extends Controller
 {
     //
+    public function errMsg() {
+        return [
+            'name_en.required' => 'Name In English is required',
+            'name_am.required' => 'Name In Amharic is required',
+            'name_en.unique' => 'Name in English must be unique',
+            'name_am.unique' => 'Name in Amharic must be unique',
+            'name_en.max' => 'Name in English should not be more 50 character',
+            'name_am.max' => 'Name in Amharic should not be more 50 character',
+            'si_unit_id.exists' => 'SI Unit  doesn\'t exist',
+            'si_unit_id.required' => 'SI Unit is required',
+            'department_id.exists' => 'Department doesn\'t exist',
+            'department_id.required' => 'Department is required',
+        ];
+    }
+    
     public function createStockItem(Request $req) {
 
         $validator = Validator::make( $req->all(), [
@@ -24,10 +39,12 @@ class StockItemController extends Controller
             'type' => [ 
                 'required', 
                 Rule::in(['Consumable','Not-consumable']) ],
-        ]);
+        ],$this->errMsg());
 
         if($validator->fails()){
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+            foreach($validator->errors()->toArray() as $k => $v) {
+                return $this->jsonReponse(false,$v[0],null,201);
+            }
         }
 
         $data = StockItem::create([
@@ -44,17 +61,20 @@ class StockItemController extends Controller
     public function updateStockItem(Request $req) {
 
         $validator = Validator::make( $req->all(), [
-            'name_en' => 'required|unique:stock_items,name_en|max:50',
-            'name_am' => 'required|unique:stock_items,name_am|max:50',
+            'id' => 'required',
+            'name_en' => 'required|unique:stock_items,name_en,'.$req->id.'|max:50',
+            'name_am' => 'required|unique:stock_items,name_am,'.$req->id.'|max:50',
             'si_unit_id' => 'required|exists:si_units,id',
             'department_id' => 'required|exists:departments,id',
             'type' => [ 
                 'required', 
                 Rule::in(['Consumable','Not-consumable']) ],
-        ]);
+        ],$this->errMsg());
 
         if($validator->fails()){
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+            foreach($validator->errors()->toArray() as $k => $v) {
+                return $this->jsonReponse(false,$v[0],null,201);
+            }
         }
         
         $item = StockItem::find($req->id);
@@ -71,7 +91,7 @@ class StockItemController extends Controller
         ]);
 
 
-        return $this->jsonReponse(true,"Created successfully",$data,201);
+        return $this->jsonReponse(true,"Updated successfully",$item,201);
     }
 
     public function getStockItemAll(Request $req) {

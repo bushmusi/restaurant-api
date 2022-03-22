@@ -11,17 +11,28 @@ use Carbon\Carbon;
 class StockInController extends Controller
 {
     //
+    public function errMsg() {
+        return [
+            'stock_item_id.required' => 'Stock item is required',
+            'stock_item_id.exists' => 'Stock item dons\'t exist',
+            'indate.required' => 'In Date is required',
+            'indate.date' => 'Invalid date format',
+            'indate.after_or_equal' => 'In Date should be after Jan-01-2022'
+        ];
+    }
     public function create(Request $req) {
         
         $validator = Validator::make( $req->all(), [
             'stock_item_id' => 'required|exists:stock_items,id',
-            'quantity' => 'required|min:1|max:1000',
+            'quantity' => 'required|numeric|between:1,1000',
             'indate' => 'required|date|after_or_equal:Jan-01-2022',
             'remark' => 'required|max:255'
-        ]);
+        ],$this->errMsg());
 
         if($validator->fails()){
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+            foreach($validator->errors()->toArray() as $k => $v) {
+                return $this->jsonReponse(false,$v[0],null,201);
+            }
         }
 
         $inDate = Carbon::parse($req->indate);
@@ -42,13 +53,16 @@ class StockInController extends Controller
 
     public function update(Request $req) {
         $validator = Validator::make( $req->all(), [
-            'quantity' => 'required|min:1|max:1000',
+            'id' => 'required',
+            'quantity' => 'required|numeric|between:1,1000',
             'indate' => 'required|date|after_or_equal:Jan-01-2022',
             'remark' => 'required|max:255'
         ]);
 
         if($validator->fails()){
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+            foreach($validator->errors()->toArray() as $k => $v) {
+                return $this->jsonReponse(false,$v[0],null,201);
+            }
         }
 
         $inDate = Carbon::parse($req->indate);

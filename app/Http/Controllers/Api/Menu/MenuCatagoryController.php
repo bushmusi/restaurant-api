@@ -10,15 +10,26 @@ use App\Models\Menu\MenuCatagory;
 class MenuCatagoryController extends Controller
 {
     //
+    public function validateErrMsg() {
+        return [
+            'menus_id.required' => 'Menu Id is required',
+            'menus_id.exists' => "Menu Id should exist in menus list",
+            'catatgories.required' => 'Catagory Id is required',
+            'catatgories.exists' => "Catagory Id shoulb exist in catagory list",
+
+        ];
+    }
     public function create(Request $request){
 
         $validator = Validator::make($request->all(), [
             'menus_id' => 'required|exists:menus,id',
             'catagories_id' => 'required|exists:catagories,id',
-        ]);
+        ],$this->validateErrMsg());
 
         if($validator->fails()){
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+            foreach($validator->errors()->toArray() as $key => $value) {
+                return $this->jsonReponse(false,$value[0],null,201);
+            }
         }
 
         $value = MenuCatagory::create([
@@ -32,14 +43,16 @@ class MenuCatagoryController extends Controller
     public function update(Request $request){
 
         $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:menu_catagories,id',
             'menus_id' => 'required|exists:menus,id',
             'catagories_id' => 'required|exists:catagories,id',
-            'id' => 'required|exists:menu_catagories,id'
 
-        ]);
+        ],$this->validateErrMsg());
 
         if($validator->fails()){
-            return $this->jsonReponse(false,$validator->errors(),null,201);
+            foreach($validator->errors()->toArray() as $key => $value) {
+                return $this->jsonReponse(false,$value[0],null,201);
+            }
         }
 
         $value = MenuCatagory::find($request->id);
